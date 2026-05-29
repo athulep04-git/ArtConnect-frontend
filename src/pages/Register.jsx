@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link ,useNavigate} from "react-router-dom";
 import { useState } from "react";
+import { registerAPI } from "../services/allAPIs";
 
 function Register() {
   const [userData, setUserData] = useState({
@@ -9,13 +10,28 @@ function Register() {
     password: "",
   });
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-
-    console.log(userData);
-
-
+  const handleRegister = async() => {
+    const {username,email,phone,password}=userData
+    if(!username||!email||!phone||!password){
+      alert("please fill details")
+    }
+    try{
+      const response=await registerAPI(userData)
+      console.log(response);
+      if(response.status==200){
+        alert(response.data.message)
+        navigate('/login')
+      }
+      else{
+        alert(response.data.message)
+      }
+    }
+    catch(err){
+      console.log(err);
+      
+    }
   };
+  const navigate = useNavigate();
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-violet-600 to-pink-500 px-5 py-10">
@@ -56,7 +72,7 @@ function Register() {
             Create Account
           </h2>
 
-          <form onSubmit={handleRegister}>
+          <form >
 
             <input
               type="text"
@@ -65,7 +81,7 @@ function Register() {
               onChange={(e) =>
                 setUserData({
                   ...userData,
-                  username: e.target.value,
+                  username: e.target.value
                 })
               }
               className="w-full p-4 mb-4 border border-gray-300 rounded-xl outline-none focus:border-violet-500"
@@ -78,7 +94,7 @@ function Register() {
               onChange={(e) =>
                 setUserData({
                   ...userData,
-                  email: e.target.value,
+                  email: e.target.value
                 })
               }
               className="w-full p-4 mb-4 border border-gray-300 rounded-xl outline-none focus:border-violet-500"
@@ -91,7 +107,7 @@ function Register() {
               onChange={(e) =>
                 setUserData({
                   ...userData,
-                  phone: e.target.value,
+                  phone: e.target.value
                 })
               }
               className="w-full p-4 mb-4 border border-gray-300 rounded-xl outline-none focus:border-violet-500"
@@ -104,15 +120,16 @@ function Register() {
               onChange={(e) =>
                 setUserData({
                   ...userData,
-                  password: e.target.value,
+                  password: e.target.value
                 })
               }
               className="w-full p-4 mb-5 border border-gray-300 rounded-xl outline-none focus:border-violet-500"
             />
 
             <button
-              type="submit"
+              type="button"
               className="w-full py-4 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:-translate-y-1 hover:shadow-xl transition duration-300"
+              onClick={handleRegister}
             >
               Register
             </button>

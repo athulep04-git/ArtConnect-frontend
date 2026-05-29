@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { loginAPI } from "../services/allAPIs";
 
 function Login() {
   const [userData, setUserData] = useState({
@@ -7,20 +8,39 @@ function Login() {
     password: "",
   });
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-
-    console.log(userData);
-
-    // API call later
+  const handleLogin = async() => {
+    const {email,password}=userData
+    if(!email||!password){
+      alert("please fill details")
+      return
+    }
+    try{
+      const response=await loginAPI(userData)
+      console.log(response);
+      if(response.status==200){
+        localStorage.setItem("token",response.data.token)
+        localStorage.setItem("user",JSON.stringify(response.data.user
+        ))
+        alert("Login success")
+        navigate('/')
+      }
+      else{
+        alert("login error")
+      }
+    }
+    catch(err){
+      console.log(err);
+      alert(
+    err.response.data) 
+    }  
   };
-
+  const navigate=useNavigate()
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-violet-600 to-pink-500 px-5 py-10">
       
       <div className="w-full max-w-6xl rounded-[30px] overflow-hidden shadow-2xl bg-white/10 backdrop-blur-lg grid lg:grid-cols-2">
 
-        {/* Left Side */}
+        
         <div className="bg-gradient-to-br from-indigo-500 to-pink-500 text-white p-12 flex flex-col justify-center">
           
           <h1 className="text-5xl font-bold mb-4">
@@ -47,14 +67,14 @@ function Login() {
 
         </div>
 
-        {/* Right Side */}
+        
         <div className="bg-white p-12 flex flex-col justify-center">
 
           <h2 className="text-4xl font-bold text-center mb-8">
             Welcome Back
           </h2>
 
-          <form onSubmit={handleLogin}>
+          <form >
 
             <input
               type="email"
@@ -83,8 +103,9 @@ function Login() {
             />
 
             <button
-              type="submit"
+              type="button"
               className="w-full py-4 rounded-full bg-gradient-to-r from-indigo-500 to-pink-500 text-white font-semibold hover:-translate-y-1 hover:shadow-xl transition duration-300"
+              onClick={handleLogin}
             >
               Login
             </button>
