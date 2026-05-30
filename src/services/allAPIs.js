@@ -10,3 +10,11 @@ export const registerAPI = async (reqBody) => {
 export const loginAPI = async (reqBody) => {
   return await commonAPI("POST", `${serverURL}/api/login`, reqBody, {});
 };
+
+export const getArtworksAPI = async () => {
+  return await commonAPI("GET", `${serverURL}/api/getartworks`,{},{});
+};
+
+export const getSingleArtworkAPI = async (id) => {
+  return await commonAPI("GET", `${serverURL}/api/getsingleartwork/${id}`,{},{});
+};

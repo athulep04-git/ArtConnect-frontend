@@ -68,7 +68,7 @@ function About() {
             {/* Artist */}
             <div className="text-center">
               <img
-                src="https://i.pravatar.cc/300?img=12"
+                src="https://media.licdn.com/dms/image/v2/D5635AQHbDeOemUCwIg/profile-framedphoto-shrink_400_400/B56Z5FGTkaJwAg-/0/1779275742083?e=1780743600&v=beta&t=RQP_S51hA4eziv9WhSd7v34R6lor_xOSJoJDkGK1bIg"
                 alt="artist"
                 className="w-52 h-52 rounded-full object-cover border-[5px] border-white shadow-2xl mx-auto"
               />
