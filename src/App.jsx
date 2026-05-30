@@ -7,6 +7,7 @@ import ArtRequest from "./pages/ArtRequest"
 import Login from "./pages/Login"
 import Register from "./pages/Register"
 import Pagenotfound from "./pages/Pagenotfound"
+import SingleArtwork from "./pages/SingleArtwork"
 
 function App() {
   
@@ -18,6 +19,7 @@ function App() {
         <Route path="/" element={<Home/>} />
         <Route path="*" element={<Pagenotfound/>} />
         <Route path="/gallery" element={<Gallery/>} />
+        <Route path="/artwork/:id" element={<SingleArtwork/>} />
         <Route path="/about" element={<About/>} />
         <Route path="/artrequest" element={<ArtRequest/>} />
         <Route path="/login" element={<Login/>} />
