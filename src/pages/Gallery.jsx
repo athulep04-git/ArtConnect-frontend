@@ -1,4 +1,27 @@
+import { useEffect, useState } from "react";
+import { getArtworksAPI } from "../services/allAPIs";
+import { useNavigate } from "react-router-dom";
+
 function Gallery() {
+  const [allArtworks,setAllArtworks]=useState([])
+  const getAllArtworks=async()=>{
+    try{
+      const response=await getArtworksAPI()
+      console.log(response);
+      if(response.status==200){
+        setAllArtworks(response.data)
+      }
+    }
+    catch(err){
+      console.log(err);
+      
+    }
+  }
+  useEffect(()=>{
+    getAllArtworks();
+  },[])
+  const navigate=useNavigate()
+  
   return (
     <section className="min-h-screen bg-slate-100 p-6 md:p-10">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8">
@@ -81,55 +104,24 @@ function Gallery() {
 
    
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
+          {allArtworks?.length>0?
+          allArtworks.map((item)=>(
+            <div
+            key={item._id} 
+            className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer"
+             onClick={() =>navigate(`/artwork/${item._id}`)}>
               <img
-                src="https://images.unsplash.com/photo-1544005313-94ddf0286df2"
+                src={item.image}
                 alt="artwork"
                 className="w-full h-[320px] object-cover"
               />
             </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"
-                alt="artwork"
-                className="w-full h-[320px] object-cover"
-              />
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5"
-                alt="artwork"
-                className="w-full h-[320px] object-cover"
-              />
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee"
-                alt="artwork"
-                className="w-full h-[320px] object-cover"
-              />
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1492724441997-5dc865305da7"
-                alt="artwork"
-                className="w-full h-[320px] object-cover"
-              />
-            </div>
-
-            <div className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer">
-              <img
-                src="https://images.unsplash.com/photo-1549880338-65ddcdfd017b"
-                alt="artwork"
-                className="w-full h-[320px] object-cover"
-              />
-            </div>
-
+          ))
+          
+        :
+        <h2>no artworks</h2>
+        }
+            
           </div>
         </main>
       </div>
