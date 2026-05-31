@@ -26,3 +26,7 @@ export const getProfileAPI = async (reqHeader) => {
 export const addArtworkAPI = async (reqBody,reqHeader) => {
   return await commonAPI("POST", `${serverURL}/api/addartwork`,reqBody,reqHeader);
 };
+
+export const deleteArtworkAPI = async (id,reqHeader) => {
+  return await commonAPI("DELETE", `${serverURL}/api/deleteartwork/${id}`,{},reqHeader);
+};

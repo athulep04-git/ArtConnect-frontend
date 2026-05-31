@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { addArtworkAPI, getArtworksAPI } from "../../services/allAPIs";
+import { addArtworkAPI, deleteArtworkAPI, getArtworksAPI } from "../../services/allAPIs";
 
 function AdminPage() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -55,6 +55,28 @@ function AdminPage() {
       alert("Failed to add artwork");
     }
   };
+  const handleDelete=async(id)=>{
+    const confirmDelete=window.confirm("Delete artwork?")
+    if(!confirmDelete){
+      return
+    }
+    const token=sessionStorage.getItem("token")
+    const reqHeader={
+      Authorization:`Bearer ${token}`
+    }
+    try{
+    const response =await deleteArtworkAPI(id,reqHeader)
+    console.log(response)
+    if(response.status=== 200){
+      alert("Artwork deleted")
+      getAllArtworks()
+    }
+    }
+    catch(err){
+    console.log(err)
+    alert("Delete failed")
+    }
+  }
   useEffect(() => {
     getAllArtworks();
   }, []);
@@ -237,7 +259,8 @@ function AdminPage() {
                               ✏️ Edit
                             </button>
 
-                            <button className="bg-red-100 text-red-600 px-4 py-2 rounded-xl">
+                            <button 
+                            onClick={()=>handleDelete(item._id)}className="bg-red-100 text-red-600 px-4 py-2 rounded-xl">
                               🗑 Delete
                             </button>
                           </div>
