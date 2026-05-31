@@ -1,6 +1,14 @@
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 function ArtRequest() {
+const navigate = useNavigate()
+useEffect(() => {
+  const token =sessionStorage.getItem("token")
+  if(!token){
+    navigate("/login")
+    return
+  }
+}, [])
   return (
     <section className="min-h-screen bg-gradient-to-br from-indigo-50 to-pink-50 py-20 px-5">
       <div className="max-w-7xl mx-auto">

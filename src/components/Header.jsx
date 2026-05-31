@@ -1,27 +1,27 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const token = localStorage.getItem("token");
+  const navigate = useNavigate();
 
-  const logout = () => {
-    localStorage.removeItem("token");
-    window.location.reload();
+  const token = sessionStorage.getItem("token");
+  const role = JSON.parse(sessionStorage.getItem("existingUser"))?.role;
+
+  const logout = () => {sessionStorage.clear();
+    navigate("/");
   };
 
   return (
     <nav className="sticky top-0 z-50 bg-gradient-to-r from-indigo-500 via-violet-600 to-pink-500 shadow-md">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        
-   
+
         <Link to="/" className="text-white text-2xl font-bold">
           🎨 ArtConnect
         </Link>
 
-    
         <button
           className="lg:hidden text-white text-2xl"
           onClick={() => setMenuOpen(!menuOpen)}
@@ -29,99 +29,106 @@ function Header() {
           ☰
         </button>
 
-     
         <div
           className={`${
             menuOpen ? "flex" : "hidden"
           } lg:flex flex-col lg:flex-row lg:items-center gap-4 absolute lg:static top-16 left-0 w-full lg:w-auto bg-violet-600 lg:bg-transparent p-5 lg:p-0`}
         >
-          <Link
-            to="/"
-            className="text-white px-4 py-2 rounded-full hover:bg-white/20 transition"
-          >
-            Home
-          </Link>
+          {role === "artist" ? (
+            <>
+             
+            </>
+          ) : (
+            <>
+              <Link
+                to="/"
+                className="text-white px-4 py-2 rounded-full hover:bg-white/20"
+              >
+                Home
+              </Link>
 
-          <Link
-            to="/gallery"
-            className="text-white px-4 py-2 rounded-full hover:bg-white/20 transition"
-          >
-            Gallery
-          </Link>
+              <Link
+                to="/gallery"
+                className="text-white px-4 py-2 rounded-full hover:bg-white/20"
+              >
+                Gallery
+              </Link>
 
-          <Link
-            to="/about"
-            className="text-white px-4 py-2 rounded-full hover:bg-white/20 transition"
-          >
-            About
-          </Link>
+              <Link
+                to="/about"
+                className="text-white px-4 py-2 rounded-full hover:bg-white/20"
+              >
+                About
+              </Link>
 
-          <Link
-            to="/artrequest"
-            className="text-white px-4 py-2 rounded-full hover:bg-white/20 transition"
-          >
-            Request Art
-          </Link>
+              <Link
+                to="/artrequest"
+                className="text-white px-4 py-2 rounded-full hover:bg-white/20"
+              >
+                Request Art
+              </Link>
+            </>
+          )}
 
-          
           <div className="relative">
             <img
-              src=""
+              src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               alt="profile"
               onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="w-11 h-11 rounded-full border-2 border-white cursor-pointer transition hover:scale-110"
+              className="w-11 h-11 rounded-full border-2 border-white cursor-pointer hover:scale-110 transition"
             />
 
-            <div
-              className={`absolute right-0 mt-2 bg-white rounded-2xl shadow-xl min-w-[180px] overflow-hidden z-50 ${
-                dropdownOpen ? "block" : "hidden"
-              }`}
-            >
-              {!token ? (
-                <>
-                  <Link
-                    to="/login"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Login
-                  </Link>
+            {dropdownOpen && (
+              <div className="absolute right-0 mt-2 bg-white rounded-2xl shadow-xl min-w-[180px] overflow-hidden z-50">
 
-                  <Link
-                    to="/register"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Register
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-3 hover:bg-gray-100"
-                    onClick={() => setDropdownOpen(false)}
-                  >
-                    Profile
-                  </Link>
+                {!token ? (
+                  <>
+                    <Link
+                      to="/login"
+                      className="block px-4 py-3 hover:bg-gray-100"
+                      onClick={() => setDropdownOpen(false)}
+                    >
+                      Login
+                    </Link>
 
-                  <Link
-                    to="/my-requests"
-                    className="block px-4 py-3 hover:bg-gray-100"
+                    <Link
                     onClick={() => setDropdownOpen(false)}
-                  >
-                    My Requests
-                  </Link>
+                      to="/register"
+                      className="block px-4 py-3 hover:bg-gray-100"
+                    >
+                      Register
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    {role !== "artist" && (
+                      <>
+                        <Link
+                          to="/profile"
+                          className="block px-4 py-3 hover:bg-gray-100"
+                        >
+                          Profile
+                        </Link>
 
-                  <button
-                    onClick={logout}
-                    className="block w-full text-left px-4 py-3 text-red-500 hover:bg-red-50"
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </div>
+                        <Link
+                          to="/my-requests"
+                          className="block px-4 py-3 hover:bg-gray-100"
+                        >
+                          My Requests
+                        </Link>
+                      </>
+                    )}
+
+                    <button
+                      onClick={logout}
+                      className="block w-full text-left px-4 py-3 text-red-500 hover:bg-red-50"
+                    >
+                      Logout
+                    </button>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </div>

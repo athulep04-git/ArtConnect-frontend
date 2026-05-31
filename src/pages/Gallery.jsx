@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 function Gallery() {
   const [allArtworks,setAllArtworks]=useState([])
+  const navigate=useNavigate()
   const getAllArtworks=async()=>{
     try{
       const response=await getArtworksAPI()
@@ -17,10 +18,15 @@ function Gallery() {
       
     }
   }
-  useEffect(()=>{
-    getAllArtworks();
-  },[])
-  const navigate=useNavigate()
+  useEffect(() => {
+  const token =sessionStorage.getItem("token")
+  if(!token){
+    navigate("/login")
+    return
+  }
+  getAllArtworks()
+}, [])
+  
   
   return (
     <section className="min-h-screen bg-slate-100 p-6 md:p-10">

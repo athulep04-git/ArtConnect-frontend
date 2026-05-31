@@ -18,12 +18,16 @@ function Login() {
       const response=await loginAPI(userData)
       console.log(response);
       if(response.status==200){
-        localStorage.setItem("token",response.data.token)
-        localStorage.setItem("user",JSON.stringify(response.data.user
-        ))
+        sessionStorage.setItem("token",response.data.token)
+        sessionStorage.setItem("existingUser",JSON.stringify(response.data.user))
         alert("Login success")
-        navigate('/')
-      }
+        
+        console.log(response.data)
+        if(response.data.user.role === "artist"){
+        navigate("/admin")
+        }else{
+        navigate("/")
+        }}
       else{
         alert("login error")
       }

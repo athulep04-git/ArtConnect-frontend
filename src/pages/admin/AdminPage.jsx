@@ -104,10 +104,6 @@ useState({
             📦 Requests
           </button>
 
-          <button className="w-full flex items-center gap-4 text-base font-medium px-5 py-4 rounded-2xl text-red-100 hover:bg-red-500/20 transition">
-            🚪 Logout
-          </button>
-
         </nav>
       </aside>
 
