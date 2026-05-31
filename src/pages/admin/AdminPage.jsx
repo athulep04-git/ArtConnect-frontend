@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { addArtworkAPI } from "../../services/allAPIs";
 
 function AdminPage() {
   const [activePage, setActivePage] =
@@ -17,6 +18,38 @@ useState({
   startingPrice: "",
   isAvailable: true
 });
+const handleAddArtwork = async () => {
+  const {title,description,category,image,startingPrice}=artworkData;
+  if (!title ||!description ||!category ||!image ||!startingPrice){
+    alert("Please fill all fields");
+    return;
+  }
+  const token =sessionStorage.getItem("token");
+  const reqHeader = {
+    Authorization: `Bearer ${token}`,
+  };
+  try {
+    const response =await addArtworkAPI(artworkData,reqHeader);
+    console.log(response);
+    if (response.status === 200) {
+      alert(
+        "Artwork added successfully"
+      );
+      setShowModal(false);
+      setArtworkData({
+        title: "",
+        description: "",
+        category: "",
+        image: "",
+        startingPrice: "",
+        isAvailable: true
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    alert("Failed to add artwork");
+  }
+};
   return (
     <section className="min-h-screen bg-slate-100 flex">
 
@@ -182,6 +215,7 @@ useState({
     setShowModal(true)
   }
   className="bg-gradient-to-r from-violet-600 to-pink-500 text-white px-5 py-3 rounded-2xl font-medium hover:scale-105 transition shadow-lg"
+  
 >
   + Add Artwork
 </button>
@@ -430,6 +464,7 @@ useState({
 
       <button
         className="w-full mt-6 bg-gradient-to-r from-violet-600 to-pink-500 text-white py-4 rounded-2xl font-semibold hover:scale-[1.02] transition"
+        onClick={handleAddArtwork}
       >
         Add Artwork
       </button>

@@ -106,6 +106,7 @@ function Header() {
                         <Link
                           to="/profile"
                           className="block px-4 py-3 hover:bg-gray-100"
+                          onClick={() => setDropdownOpen(false)}
                         >
                           Profile
                         </Link>
@@ -113,6 +114,7 @@ function Header() {
                         <Link
                           to="/my-requests"
                           className="block px-4 py-3 hover:bg-gray-100"
+                          onClick={() => setDropdownOpen(false)}
                         >
                           My Requests
                         </Link>
@@ -122,6 +124,7 @@ function Header() {
                     <button
                       onClick={logout}
                       className="block w-full text-left px-4 py-3 text-red-500 hover:bg-red-50"
+                      
                     >
                       Logout
                     </button>

@@ -9,6 +9,7 @@ import Register from "./pages/Register"
 import Pagenotfound from "./pages/Pagenotfound"
 import SingleArtwork from "./pages/SingleArtwork"
 import AdminPage from "./pages/admin/AdminPage"
+import Profile from "./pages/Profile"
 
 function App() {
   
@@ -25,6 +26,7 @@ function App() {
         <Route path="/artrequest" element={<ArtRequest/>} />
         <Route path="/login" element={<Login/>} />
         <Route path="/register" element={<Register/>} />
+        <Route path="/profile" element={<Profile/>} />
         <Route path="/admin" element={<AdminPage/>} />
       </Routes>
     </>

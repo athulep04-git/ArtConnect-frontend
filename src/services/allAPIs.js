@@ -18,3 +18,11 @@ export const getArtworksAPI = async () => {
 export const getSingleArtworkAPI = async (id) => {
   return await commonAPI("GET", `${serverURL}/api/getsingleartwork/${id}`,{},{});
 };
+
+export const getProfileAPI = async (reqHeader) => {
+  return await commonAPI("GET",`${serverURL}/api/getprofile`,{},reqHeader);
+};
+
+export const addArtworkAPI = async (reqBody,reqHeader) => {
+  return await commonAPI("POST", `${serverURL}/api/addartwork`,reqBody,reqHeader);
+};
