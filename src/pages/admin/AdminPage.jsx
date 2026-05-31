@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
-import { addArtworkAPI, deleteArtworkAPI, getArtworksAPI } from "../../services/allAPIs";
+import {
+  addArtworkAPI,
+  deleteArtworkAPI,
+  getArtworksAPI,
+  updateArtworkAPI,
+} from "../../services/allAPIs";
 
 function AdminPage() {
   const [activePage, setActivePage] = useState("dashboard");
   const [showModal, setShowModal] = useState(false);
   const [allArtworks, setAllArtworks] = useState([]);
+  const [editId, setEditId] = useState("");
   const [artworkData, setArtworkData] = useState({
     title: "",
     description: "",
@@ -55,28 +61,54 @@ function AdminPage() {
       alert("Failed to add artwork");
     }
   };
-  const handleDelete=async(id)=>{
-    const confirmDelete=window.confirm("Delete artwork?")
-    if(!confirmDelete){
-      return
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm("Delete artwork?");
+    if (!confirmDelete) {
+      return;
     }
-    const token=sessionStorage.getItem("token")
-    const reqHeader={
-      Authorization:`Bearer ${token}`
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await deleteArtworkAPI(id, reqHeader);
+      console.log(response);
+      if (response.status === 200) {
+        alert("Artwork deleted");
+        getAllArtworks();
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Delete failed");
     }
-    try{
-    const response =await deleteArtworkAPI(id,reqHeader)
-    console.log(response)
-    if(response.status=== 200){
-      alert("Artwork deleted")
-      getAllArtworks()
+  };
+  const handleUpdateArtwork = async () => {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await updateArtworkAPI(editId, artworkData, reqHeader);
+      console.log(response);
+      if (response.status === 200) {
+        alert("Artwork updated");
+        setShowModal(false);
+        setEditId("");
+        getAllArtworks();
+        setArtworkData({
+          title: "",
+          description: "",
+          category: "",
+          image: "",
+          startingPrice: "",
+          isAvailable: "",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Update failed");
     }
-    }
-    catch(err){
-    console.log(err)
-    alert("Delete failed")
-    }
-  }
+  };
   useEffect(() => {
     getAllArtworks();
   }, []);
@@ -181,7 +213,20 @@ function AdminPage() {
               </h2>
 
               <button
-                onClick={() => setShowModal(true)}
+                onClick={() => {
+                  setEditId("");
+
+                  setArtworkData({
+                    title: "",
+                    description: "",
+                    category: "",
+                    image: "",
+                    startingPrice: "",
+                    isAvailable: true,
+                  });
+
+                  setShowModal(true);
+                }}
                 className="bg-gradient-to-r from-violet-600 to-pink-500 text-white px-5 py-3 rounded-2xl font-medium hover:scale-105 transition shadow-lg"
               >
                 + Add Artwork
@@ -255,12 +300,28 @@ function AdminPage() {
 
                         <td className="p-4">
                           <div className="flex justify-center gap-3">
-                            <button className="bg-indigo-100 text-indigo-600 px-4 py-2 rounded-xl">
+                            <button
+                              onClick={() => {
+                                setShowModal(true);
+                                setEditId(item._id);
+                                setArtworkData({
+                                  title: item.title,
+                                  description: item.description,
+                                  category: item.category,
+                                  image: item.image,
+                                  startingPrice: item.startingPrice,
+                                  isAvailable: item.isAvailable,
+                                });
+                              }}
+                              className="bg-indigo-100 text-indigo-600 px-4 py-2 rounded-xl"
+                            >
                               ✏️ Edit
                             </button>
 
-                            <button 
-                            onClick={()=>handleDelete(item._id)}className="bg-red-100 text-red-600 px-4 py-2 rounded-xl">
+                            <button
+                              onClick={() => handleDelete(item._id)}
+                              className="bg-red-100 text-red-600 px-4 py-2 rounded-xl"
+                            >
                               🗑 Delete
                             </button>
                           </div>
@@ -295,7 +356,9 @@ function AdminPage() {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center items-center z-50 px-5">
           <div className="bg-white w-full max-w-2xl rounded-[30px] p-8 shadow-2xl">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Add Artwork</h2>
+              <h2 className="text-2xl font-bold">
+                {editId ? "Edit Artwork" : "Add Artwork"}
+              </h2>
 
               <button onClick={() => setShowModal(false)} className="text-2xl">
                 ✕
@@ -307,7 +370,9 @@ function AdminPage() {
                 type="text"
                 placeholder="Title"
                 value={artworkData.title}
-                onChange={(e) =>setArtworkData({...artworkData,title: e.target.value,})}
+                onChange={(e) =>
+                  setArtworkData({ ...artworkData, title: e.target.value })
+                }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500"
               />
 
@@ -315,7 +380,8 @@ function AdminPage() {
                 type="text"
                 placeholder="Category"
                 value={artworkData.category}
-                onChange={(e) =>setArtworkData({...artworkData,category: e.target.value,})
+                onChange={(e) =>
+                  setArtworkData({ ...artworkData, category: e.target.value })
                 }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500"
               />
@@ -324,7 +390,9 @@ function AdminPage() {
                 type="text"
                 placeholder="Image URL"
                 value={artworkData.image}
-                onChange={(e) =>setArtworkData({...artworkData,image: e.target.value,})}
+                onChange={(e) =>
+                  setArtworkData({ ...artworkData, image: e.target.value })
+                }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500 md:col-span-2"
               />
 
@@ -332,7 +400,12 @@ function AdminPage() {
                 placeholder="Description"
                 rows="4"
                 value={artworkData.description}
-                onChange={(e) =>setArtworkData({...artworkData,description: e.target.value,})}
+                onChange={(e) =>
+                  setArtworkData({
+                    ...artworkData,
+                    description: e.target.value,
+                  })
+                }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500 md:col-span-2 resize-none"
               />
 
@@ -340,13 +413,23 @@ function AdminPage() {
                 type="number"
                 placeholder="Starting Price"
                 value={artworkData.startingPrice}
-                onChange={(e) =>setArtworkData({...artworkData,startingPrice: e.target.value,})}
+                onChange={(e) =>
+                  setArtworkData({
+                    ...artworkData,
+                    startingPrice: e.target.value,
+                  })
+                }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500"
               />
 
               <select
                 value={artworkData.isAvailable}
-                onChange={(e) =>setArtworkData({...artworkData,isAvailable: e.target.value === "true",})}
+                onChange={(e) =>
+                  setArtworkData({
+                    ...artworkData,
+                    isAvailable: e.target.value === "true",
+                  })
+                }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500"
               >
                 <option value={true}>Available</option>
@@ -357,9 +440,9 @@ function AdminPage() {
 
             <button
               className="w-full mt-6 bg-gradient-to-r from-violet-600 to-pink-500 text-white py-4 rounded-2xl font-semibold hover:scale-[1.02] transition"
-              onClick={handleAddArtwork}
+              onClick={editId ? handleUpdateArtwork : handleAddArtwork}
             >
-              Add Artwork
+              {editId ? "Update Artwork" : "Add Artwork"}
             </button>
           </div>
         </div>

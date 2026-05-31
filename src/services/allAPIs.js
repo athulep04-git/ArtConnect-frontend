@@ -30,3 +30,8 @@ export const addArtworkAPI = async (reqBody,reqHeader) => {
 export const deleteArtworkAPI = async (id,reqHeader) => {
   return await commonAPI("DELETE", `${serverURL}/api/deleteartwork/${id}`,{},reqHeader);
 };
+
+export const updateArtworkAPI = async (id,reqBody,reqHeader) => {
+  return await commonAPI("PUT", `${serverURL}/api/updateartwork/${id}`,reqBody,reqHeader);
+};
+
