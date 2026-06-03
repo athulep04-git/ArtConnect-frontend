@@ -49,21 +49,44 @@ function AdminPage() {
   };
   const handleAddArtwork = async () => {
     const { title, description, category, image, startingPrice } = artworkData;
+
     if (!title || !description || !category || !image || !startingPrice) {
       alert("Please fill all fields");
       return;
     }
+
     const token = sessionStorage.getItem("token");
+
     const reqHeader = {
       Authorization: `Bearer ${token}`,
     };
+
+    const formData = new FormData();
+
+    formData.append("title", artworkData.title);
+
+    formData.append("description", artworkData.description);
+
+    formData.append("category", artworkData.category);
+
+    formData.append("startingPrice", artworkData.startingPrice);
+
+    formData.append("isAvailable", artworkData.isAvailable);
+
+    formData.append("image", artworkData.image);
+
     try {
-      const response = await addArtworkAPI(artworkData, reqHeader);
+      const response = await addArtworkAPI(formData, reqHeader);
+
       console.log(response);
+
       if (response.status === 200) {
         alert("Artwork added successfully");
+
         setShowModal(false);
+
         getAllArtworks();
+
         setArtworkData({
           title: "",
           description: "",
@@ -101,17 +124,41 @@ function AdminPage() {
   };
   const handleUpdateArtwork = async () => {
     const token = sessionStorage.getItem("token");
+
     const reqHeader = {
       Authorization: `Bearer ${token}`,
     };
+
+    const formData = new FormData();
+
+    formData.append("title", artworkData.title);
+
+    formData.append("description", artworkData.description);
+
+    formData.append("category", artworkData.category);
+
+    formData.append("startingPrice", artworkData.startingPrice);
+
+    formData.append("isAvailable", artworkData.isAvailable);
+
+    if (artworkData.image instanceof File) {
+      formData.append("image", artworkData.image);
+    }
+
     try {
-      const response = await updateArtworkAPI(editId, artworkData, reqHeader);
+      const response = await updateArtworkAPI(editId, formData, reqHeader);
+
       console.log(response);
+
       if (response.status === 200) {
         alert("Artwork updated");
+
         setShowModal(false);
+
         setEditId("");
+
         getAllArtworks();
+
         setArtworkData({
           title: "",
           description: "",
@@ -123,6 +170,7 @@ function AdminPage() {
       }
     } catch (err) {
       console.log(err);
+
       alert("Update failed");
     }
   };
@@ -482,11 +530,13 @@ function AdminPage() {
               />
 
               <input
-                type="text"
-                placeholder="Image URL"
-                value={artworkData.image}
+                type="file"
+                accept="image/*"
                 onChange={(e) =>
-                  setArtworkData({ ...artworkData, image: e.target.value })
+                  setArtworkData({
+                    ...artworkData,
+                    image: e.target.files[0],
+                  })
                 }
                 className="border p-4 rounded-xl outline-none focus:border-violet-500 md:col-span-2"
               />
