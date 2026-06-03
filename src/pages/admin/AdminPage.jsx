@@ -3,6 +3,7 @@ import {
   addArtworkAPI,
   deleteArtworkAPI,
   getArtworksAPI,
+  getUsersAPI,
   updateArtworkAPI,
 } from "../../services/allAPIs";
 
@@ -10,6 +11,7 @@ function AdminPage() {
   const [activePage, setActivePage] = useState("dashboard");
   const [showModal, setShowModal] = useState(false);
   const [allArtworks, setAllArtworks] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [editId, setEditId] = useState("");
   const [artworkData, setArtworkData] = useState({
     title: "",
@@ -25,6 +27,21 @@ function AdminPage() {
       console.log(response);
       if (response.status === 200) {
         setAllArtworks(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const getAllUsers = async () => {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await getUsersAPI(reqHeader);
+      console.log(response);
+      if (response.status === 200) {
+        setAllUsers(response.data);
       }
     } catch (err) {
       console.log(err);
@@ -110,6 +127,7 @@ function AdminPage() {
     }
   };
   useEffect(() => {
+    getAllUsers();
     getAllArtworks();
   }, []);
   return (
@@ -183,25 +201,29 @@ function AdminPage() {
             <div className="bg-blue-500 rounded-[25px] p-5 text-white shadow-lg">
               <h4 className="text-sm font-medium opacity-90">TOTAL ARTWORKS</h4>
 
-              <h1 className="text-4xl font-bold mt-3">25</h1>
+              <h1 className="text-4xl font-bold mt-3">{allArtworks.length}</h1>
             </div>
 
             <div className="bg-green-600 rounded-[25px] p-5 text-white shadow-lg">
               <h4 className="text-sm font-medium opacity-90">AVAILABLE</h4>
 
-              <h1 className="text-4xl font-bold mt-3">18</h1>
+              <h1 className="text-4xl font-bold mt-3">
+                {allArtworks.filter((item) => item.isAvailable).length}
+              </h1>
             </div>
 
             <div className="bg-red-500 rounded-[25px] p-5 text-white shadow-lg">
               <h4 className="text-sm font-medium opacity-90">UNAVAILABLE</h4>
 
-              <h1 className="text-4xl font-bold mt-3">7</h1>
+              <h1 className="text-4xl font-bold mt-3">
+                {allArtworks.filter((item) => !item.isAvailable).length}
+              </h1>
             </div>
 
             <div className="bg-slate-600 rounded-[25px] p-5 text-white shadow-lg">
-              <h4 className="text-sm font-medium opacity-90">REQUESTS</h4>
+              <h4 className="text-sm font-medium opacity-90">USERS</h4>
 
-              <h1 className="text-4xl font-bold mt-3">14</h1>
+              <h1 className="text-4xl font-bold mt-3">{allUsers.length}</h1>
             </div>
           </div>
         )}
@@ -342,8 +364,81 @@ function AdminPage() {
         )}
 
         {activePage === "users" && (
-          <div className="bg-white rounded-[30px] p-8 shadow-xl mt-8">
-            <h2 className="text-2xl font-bold">Users Section</h2>
+          <div className="bg-white rounded-[30px] shadow-xl mt-8 p-7">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Users Management
+              </h2>
+
+              <div className="bg-violet-100 text-violet-700 px-4 py-2 rounded-xl font-medium">
+                Total Users: {allUsers.length}
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="p-4 text-sm font-semibold text-gray-700">
+                      #
+                    </th>
+
+                    <th className="p-4 text-sm font-semibold text-gray-700">
+                      Username
+                    </th>
+
+                    <th className="p-4 text-sm font-semibold text-gray-700">
+                      Email
+                    </th>
+
+                    <th className="p-4 text-sm font-semibold text-gray-700">
+                      Phone
+                    </th>
+
+                    <th className="p-4 text-sm font-semibold text-gray-700">
+                      Role
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {allUsers?.length > 0 ? (
+                    allUsers.map((user, index) => (
+                      <tr
+                        key={user._id}
+                        className="border-b hover:bg-slate-50 transition"
+                      >
+                        <td className="p-4">{index + 1}</td>
+
+                        <td className="p-4 font-medium">{user.username}</td>
+
+                        <td className="p-4">{user.email}</td>
+
+                        <td className="p-4">{user.phone}</td>
+
+                        <td className="p-4">
+                          <span
+                            className={`px-4 py-2 rounded-full text-xs font-medium ${
+                              user.role === "artist"
+                                ? "bg-violet-100 text-violet-700"
+                                : "bg-slate-100 text-slate-700"
+                            }`}
+                          >
+                            {user.role}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="5" className="text-center p-6 text-gray-500">
+                        No users found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
         {activePage === "requests" && (

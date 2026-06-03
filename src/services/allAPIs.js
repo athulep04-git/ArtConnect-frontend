@@ -35,3 +35,7 @@ export const updateArtworkAPI = async (id,reqBody,reqHeader) => {
   return await commonAPI("PUT", `${serverURL}/api/updateartwork/${id}`,reqBody,reqHeader);
 };
 
+export const getUsersAPI = async (reqHeader) => {
+  return await commonAPI("GET",`${serverURL}/api/getallusers`,{},reqHeader);
+};
+
