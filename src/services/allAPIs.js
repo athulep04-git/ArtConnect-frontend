@@ -39,3 +39,6 @@ export const getUsersAPI = async (reqHeader) => {
   return await commonAPI("GET",`${serverURL}/api/getallusers`,{},reqHeader);
 };
 
+export const addRequestAPI =(reqBody,reqHeader)=>{
+  return await commonAPI("POST",`${serverURL}/api/sendreq`,reqBody,reqHeader)
+};
