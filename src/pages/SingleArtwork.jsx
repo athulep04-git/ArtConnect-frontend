@@ -30,7 +30,7 @@ function SingleArtwork() {
           to="/gallery"
           className="inline-flex items-center gap-2 mb-8 text-indigo-600 font-medium hover:underline"
         >
-          ← Back to Gallery
+          ← Back
         </Link>
 
         {!artwork ? (
