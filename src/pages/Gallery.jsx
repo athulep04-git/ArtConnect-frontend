@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 function Gallery() {
   const [allArtworks,setAllArtworks]=useState([])
+  const [selectedCategory,setSelectedCategory] =useState("All")
   const navigate=useNavigate()
+  const categories =["All",...new Set(allArtworks.map((item)=>item.category))]
+
   const getAllArtworks=async()=>{
     try{
       const response=await getArtworksAPI()
@@ -18,6 +21,7 @@ function Gallery() {
       
     }
   }
+  const filteredArtworks =selectedCategory==="All"?allArtworks: allArtworks.filter((item)=>item.category===selectedCategory)
   useEffect(() => {
   const token =sessionStorage.getItem("token")
   if(!token){
@@ -45,52 +49,23 @@ function Gallery() {
             </button>
           </div>
 
-  
-          <div className="mb-8">
-            <label className="font-bold block mb-3">
-              Medium
-            </label>
-
-            <div className="flex flex-wrap gap-3">
-              <button className="px-4 py-2 rounded-full bg-indigo-500 text-white">
-                All Works
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Portrait
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Landscape
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Watercolor
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Sketch
-              </button>
-            </div>
-          </div>
-
           <div>
-            <label className="font-bold block mb-3">
-              Orientation
-            </label>
+
 
             <div className="flex flex-wrap gap-3">
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Portrait
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-500 text-white">
-                Landscape
-              </button>
-
-              <button className="px-4 py-2 rounded-full bg-indigo-100 hover:bg-indigo-200 transition">
-                Square
-              </button>
+              {categories.map((category) => (
+                <button
+                  key={category}
+                  onClick={() =>
+                    setSelectedCategory(category)
+                  }
+                  className={`px-4 py-2 rounded-full transition ${
+                    selectedCategory === category? "bg-indigo-500 text-white": "bg-indigo-100 hover:bg-indigo-200"
+                  }`}
+                >
+                  {category}
+                </button>
+              ))}
             </div>
           </div>
         </aside>
