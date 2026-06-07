@@ -21,7 +21,7 @@ function Gallery() {
       
     }
   }
-  const filteredArtworks =selectedCategory==="All"?allArtworks: allArtworks.filter((item)=>item.category===selectedCategory)
+  const filteredArtworks =selectedCategory.toLowerCase()==="all"?allArtworks: allArtworks.filter((item)=>item.category.toLowerCase()===selectedCategory.toLowerCase())
   useEffect(() => {
   const token =sessionStorage.getItem("token")
   if(!token){
@@ -44,8 +44,8 @@ function Gallery() {
               Filters
             </h5>
 
-            <button className="text-indigo-500 text-sm hover:underline">
-              Reset All
+            <button onClick={() =>setSelectedCategory("All")}className="text-indigo-500 text-sm hover:underline">
+            Reset All
             </button>
           </div>
 
@@ -60,7 +60,7 @@ function Gallery() {
                     setSelectedCategory(category)
                   }
                   className={`px-4 py-2 rounded-full transition ${
-                    selectedCategory === category? "bg-indigo-500 text-white": "bg-indigo-100 hover:bg-indigo-200"
+                    selectedCategory.toLowerCase() === category.toLowerCase()? "bg-indigo-500 text-white": "bg-indigo-100 hover:bg-indigo-200"
                   }`}
                 >
                   {category}
@@ -85,8 +85,8 @@ function Gallery() {
 
    
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-          {allArtworks?.length>0?
-          allArtworks.map((item)=>(
+          {filteredArtworks?.length>0?
+          filteredArtworks.map((item)=>(
             <div
             key={item._id} 
             className="bg-white rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 hover:shadow-2xl transition duration-300 cursor-pointer"
