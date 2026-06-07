@@ -10,6 +10,7 @@ import Pagenotfound from "./pages/Pagenotfound"
 import SingleArtwork from "./pages/SingleArtwork"
 import AdminPage from "./pages/admin/AdminPage"
 import Profile from "./pages/Profile"
+import MyRequests from "./pages/MyRequests"
 
 function App() {
   
@@ -28,6 +29,7 @@ function App() {
         <Route path="/register" element={<Register/>} />
         <Route path="/profile" element={<Profile/>} />
         <Route path="/admin" element={<AdminPage/>} />
+        <Route path="/myrequests" element={<MyRequests/>} />
       </Routes>
     </>
   )

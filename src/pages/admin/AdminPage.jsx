@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {
   addArtworkAPI,
   deleteArtworkAPI,
+  getAllRequestsAPI,
   getArtworksAPI,
   getUsersAPI,
   updateArtworkAPI,
@@ -13,6 +14,7 @@ function AdminPage() {
   const [allArtworks, setAllArtworks] = useState([]);
   const [allUsers, setAllUsers] = useState([]);
   const [editId, setEditId] = useState("");
+  const [allRequests, setAllRequests] = useState([]);
   const [artworkData, setArtworkData] = useState({
     title: "",
     description: "",
@@ -42,6 +44,23 @@ function AdminPage() {
       console.log(response);
       if (response.status === 200) {
         setAllUsers(response.data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getAllRequests = async () => {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+
+    try {
+      const response = await getAllRequestsAPI(reqHeader);
+      console.log(response);
+      if (response.status === 200) {
+        setAllRequests(response.data);
       }
     } catch (err) {
       console.log(err);
@@ -177,6 +196,7 @@ function AdminPage() {
   useEffect(() => {
     getAllUsers();
     getAllArtworks();
+    getAllRequests();
   }, []);
   return (
     <section className="min-h-screen bg-slate-100 flex">
@@ -490,8 +510,113 @@ function AdminPage() {
           </div>
         )}
         {activePage === "requests" && (
-          <div className="bg-white rounded-[30px] p-8 shadow-xl mt-8">
-            <h2 className="text-2xl font-bold">Requests Section</h2>
+          <div className="bg-white rounded-[30px] shadow-xl mt-8 p-7">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">
+                Request Management
+              </h2>
+
+              <div className="bg-violet-100 text-violet-700 px-4 py-2 rounded-xl font-medium">
+                Total Requests: {allRequests.length}
+              </div>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left">
+                <thead className="bg-slate-100">
+                  <tr>
+                    <th className="p-4">Image</th>
+
+                    <th className="p-4">User</th>
+
+                    <th className="p-4">Art Type</th>
+
+                    <th className="p-4">Budget</th>
+
+                    <th className="p-4">Deadline</th>
+
+                    <th className="p-4">Status</th>
+
+                    <th className="p-4">Payment</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {allRequests?.length > 0 ? (
+                    allRequests.map((item, index) => (
+                      <tr
+                        key={item._id}
+                        className="border-b hover:bg-slate-50 transition"
+                      >
+                        <td className="p-4">
+                          <img
+                            src={item.referenceImage}
+                            alt="request"
+                            className="w-16 h-16 rounded-2xl object-cover"
+                          />
+                        </td>
+
+                        <td className="p-4">
+                          <h4 className="font-medium">
+                            {item.userId?.username}
+                          </h4>
+
+                          <p className="text-sm text-gray-500">
+                            {item.userId?.email}
+                          </p>
+                        </td>
+
+                        <td className="p-4 font-medium">{item.artType}</td>
+
+                        <td className="p-4 text-pink-500 font-semibold">
+                          ₹{item.budget}
+                        </td>
+
+                        <td className="p-4">
+                          {new Date(item.deadline).toLocaleDateString()}
+                        </td>
+
+                        <td className="p-4">
+                          <span
+                            className={`px-4 py-2 rounded-full text-xs font-medium ${
+                              item.status === "pending"
+                                ? "bg-yellow-100 text-yellow-700"
+                                : item.status === "approved"
+                                  ? "bg-blue-100 text-blue-700"
+                                  : item.status === "completed"
+                                    ? "bg-green-100 text-green-700"
+                                    : item.status === "rejected"
+                                      ? "bg-red-100 text-red-700"
+                                      : "bg-violet-100 text-violet-700"
+                            }`}
+                          >
+                            {item.status}
+                          </span>
+                        </td>
+
+                        <td className="p-4">
+                          <span
+                            className={`px-4 py-2 rounded-full text-xs font-medium ${
+                              item.paymentStatus === "paid"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {item.paymentStatus}
+                          </span>
+                        </td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan="7" className="text-center p-6 text-gray-500">
+                        No requests found
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
       </main>
