@@ -112,7 +112,7 @@ function Header() {
                         </Link>
 
                         <Link
-                          to="/my-requests"
+                          to="/myrequests"
                           className="block px-4 py-3 hover:bg-gray-100"
                           onClick={() => setDropdownOpen(false)}
                         >

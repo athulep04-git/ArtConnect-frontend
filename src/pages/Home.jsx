@@ -117,7 +117,7 @@ function Home() {
 
       <div className="rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 transition duration-300">
         <img
-          src="https://images.unsplash.com/photo-1544005313-94ddf0286df2"
+          src="src\assets\1.jpg"
           alt="Portrait"
           className="h-[300px] w-full object-cover"
         />
@@ -131,21 +131,21 @@ function Home() {
 
       <div className="rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 transition duration-300">
         <img
-          src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"
-          alt="Landscape"
+          src="src\assets\3.jpg"
+          alt="wall art"
           className="h-[300px] w-full object-cover"
         />
 
         <div className="p-5 text-center bg-white">
           <h3 className="text-xl font-bold">
-            Landscape
+            Wall art
           </h3>
         </div>
       </div>
 
       <div className="rounded-3xl overflow-hidden shadow-lg hover:-translate-y-3 transition duration-300">
         <img
-          src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5"
+          src="src\assets\2.jpg"
           alt="Watercolor"
           className="h-[300px] w-full object-cover"
         />

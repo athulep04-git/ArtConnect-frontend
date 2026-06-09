@@ -6,6 +6,7 @@ import {
   getArtworksAPI,
   getUsersAPI,
   updateArtworkAPI,
+  updateRequestAPI,
 } from "../../services/allAPIs";
 
 function AdminPage() {
@@ -15,6 +16,11 @@ function AdminPage() {
   const [allUsers, setAllUsers] = useState([]);
   const [editId, setEditId] = useState("");
   const [allRequests, setAllRequests] = useState([]);
+  const [requestData, setRequestData] = useState({
+    id: "",
+    status: "",
+    price: "",
+  });
   const [artworkData, setArtworkData] = useState({
     title: "",
     description: "",
@@ -190,6 +196,35 @@ function AdminPage() {
     } catch (err) {
       console.log(err);
 
+      alert("Update failed");
+    }
+  };
+  const handleUpdateRequest = async () => {
+    const token = sessionStorage.getItem("token");
+    const reqHeader = {
+      Authorization: `Bearer ${token}`,
+    };
+    try {
+      const response = await updateRequestAPI(
+        requestData.id,
+        {
+          status: requestData.status,
+          price: requestData.price,
+        },
+        reqHeader,
+      );
+      console.log(response);
+      if (response.status === 200) {
+        alert("Request updated");
+        getAllRequests();
+        setRequestData({
+          id: "",
+          status: "",
+          price: "",
+        });
+      }
+    } catch (err) {
+      console.log(err);
       alert("Update failed");
     }
   };
@@ -533,17 +568,19 @@ function AdminPage() {
 
                     <th className="p-4">Budget</th>
 
-                    <th className="p-4">Deadline</th>
+                    <th className="p-4 whitespace-nowrap">Deadline</th>
 
-                    <th className="p-4">Status</th>
+                    <th className="p-4 min-w-[140px]">Status</th>
 
-                    <th className="p-4">Payment</th>
+                    <th className="p-4 min-w-[120px]">Payment</th>
+
+                    <th className="p-4 w-[170px]">Actions</th>
                   </tr>
                 </thead>
 
                 <tbody>
                   {allRequests?.length > 0 ? (
-                    allRequests.map((item, index) => (
+                    allRequests.map((item) => (
                       <tr
                         key={item._id}
                         className="border-b hover:bg-slate-50 transition"
@@ -556,29 +593,31 @@ function AdminPage() {
                           />
                         </td>
 
-                        <td className="p-4">
-                          <h4 className="font-medium">
+                        <td className="p-4 min-w-[220px]">
+                          <h4 className="font-semibold text-gray-800">
                             {item.userId?.username}
                           </h4>
 
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-gray-500 break-all">
                             {item.userId?.email}
                           </p>
                         </td>
 
-                        <td className="p-4 font-medium">{item.artType}</td>
+                        <td className="p-4 font-medium whitespace-nowrap">
+                          {item.artType}
+                        </td>
 
-                        <td className="p-4 text-pink-500 font-semibold">
+                        <td className="p-4 text-pink-500 font-semibold whitespace-nowrap">
                           ₹{item.budget}
                         </td>
 
-                        <td className="p-4">
+                        <td className="p-4 whitespace-nowrap">
                           {new Date(item.deadline).toLocaleDateString()}
                         </td>
 
-                        <td className="p-4">
+                        <td className="p-4 min-w-[140px]">
                           <span
-                            className={`px-4 py-2 rounded-full text-xs font-medium ${
+                            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
                               item.status === "pending"
                                 ? "bg-yellow-100 text-yellow-700"
                                 : item.status === "approved"
@@ -594,9 +633,9 @@ function AdminPage() {
                           </span>
                         </td>
 
-                        <td className="p-4">
+                        <td className="p-4 min-w-[120px]">
                           <span
-                            className={`px-4 py-2 rounded-full text-xs font-medium ${
+                            className={`px-4 py-2 rounded-full text-xs font-medium whitespace-nowrap ${
                               item.paymentStatus === "paid"
                                 ? "bg-green-100 text-green-700"
                                 : "bg-red-100 text-red-700"
@@ -605,11 +644,66 @@ function AdminPage() {
                             {item.paymentStatus}
                           </span>
                         </td>
+
+                        <td className="p-4 w-[170px]">
+                          <div className="flex flex-col gap-2">
+                            <select
+                              value={
+                                requestData.id === item._id
+                                  ? requestData.status
+                                  : item.status
+                              }
+                              onChange={(e) =>
+                                setRequestData({
+                                  ...requestData,
+                                  id: item._id,
+                                  status: e.target.value,
+                                })
+                              }
+                              className="border rounded-lg px-2 py-2 text-sm w-full"
+                            >
+                              <option value="pending">Pending</option>
+
+                              <option value="approved">Approved</option>
+
+                              <option value="rejected">Rejected</option>
+
+                              <option value="in progress">In Progress</option>
+
+                              <option value="completed">Completed</option>
+                            </select>
+
+                            <input
+                              type="number"
+                              placeholder="Final Price"
+                              value={
+                                requestData.id === item._id
+                                  ? requestData.price
+                                  : item.price
+                              }
+                              onChange={(e) =>
+                                setRequestData({
+                                  ...requestData,
+                                  id: item._id,
+                                  price: e.target.value,
+                                })
+                              }
+                              className="border rounded-lg px-3 py-2 text-sm w-full"
+                            />
+
+                            <button
+                              onClick={handleUpdateRequest}
+                              className="bg-violet-500 hover:bg-violet-600 text-white py-2 rounded-lg text-sm transition"
+                            >
+                              Update
+                            </button>
+                          </div>
+                        </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan="7" className="text-center p-6 text-gray-500">
+                      <td colSpan="8" className="text-center p-6 text-gray-500">
                         No requests found
                       </td>
                     </tr>

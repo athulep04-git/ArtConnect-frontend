@@ -51,3 +51,7 @@ export const getMyRequestsAPI =(reqHeader)=>{
 export const getAllRequestsAPI =(reqHeader)=>{
   return commonAPI("GET",`${serverURL}/api/allrequests`,{},reqHeader)
 }
+
+export const updateRequestAPI =(id,reqBody,reqHeader)=>{
+  return commonAPI("PUT",`${serverURL}/api/updaterequest/${id}`,reqBody,reqHeader)
+}
