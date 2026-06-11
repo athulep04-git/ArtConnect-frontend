@@ -65,16 +65,16 @@ function About() {
 
           <div className="grid lg:grid-cols-3 gap-8 items-center">
 
-            {/* Artist */}
+        
             <div className="text-center">
               <img
-                src="https://media.licdn.com/dms/image/v2/D5635AQHbDeOemUCwIg/profile-framedphoto-shrink_400_400/B56Z5FGTkaJwAg-/0/1779275742083?e=1780743600&v=beta&t=RQP_S51hA4eziv9WhSd7v34R6lor_xOSJoJDkGK1bIg"
+                src="src\assets\profile.jpeg"
                 alt="artist"
                 className="w-52 h-52 rounded-full object-cover border-[5px] border-white shadow-2xl mx-auto"
               />
 
               <h4 className="text-2xl font-bold mt-5">
-                Athul Krishna
+                Athul Krishna EP
               </h4>
 
               <p className="text-gray-500">
@@ -82,7 +82,7 @@ function About() {
               </p>
             </div>
 
-            {/* Specialties */}
+         
             <div className="bg-white rounded-3xl shadow-xl p-8 h-full">
               <h4 className="text-2xl font-bold mb-5">
                 🎨 Specialties
@@ -96,7 +96,6 @@ function About() {
               </ul>
             </div>
 
-            {/* Experience */}
             <div className="bg-white rounded-3xl shadow-xl p-8 h-full">
               <h4 className="text-2xl font-bold mb-5">
                 ⭐ Experience
@@ -114,7 +113,7 @@ function About() {
         </div>
       </section>
 
-      {/* Mission & Vision */}
+
       <section className="bg-slate-50 py-20">
         <div className="max-w-7xl mx-auto px-5 grid md:grid-cols-2 gap-8">
 
@@ -141,7 +140,6 @@ function About() {
         </div>
       </section>
 
-      {/* Steps */}
       <section className="py-20">
         <div className="max-w-7xl mx-auto px-5">
 
